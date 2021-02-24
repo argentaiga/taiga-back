@@ -185,12 +185,12 @@ class JiraImporterCommon:
 
         options['users_bindings'] = {k: resolve_user(v) for k,v in options['users_bindings'].items() if v is not None}
 
-    def list_users(self):
+    def list_users(self, project_id):
         result = []
-        projects = self._client.get('/project')
+        projects = self._client.get('/project/{}'.format(project_id))
         users = self._client.get("/user/assignable/multiProjectSearch", {
             "username": "",
-            "projectKeys": list(map(lambda x: x['key'], projects)),
+            "projectKeys": projects['key'],
             "maxResults": 1000,
         })
         for user in users:
